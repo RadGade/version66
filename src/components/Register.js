@@ -4,9 +4,10 @@ import {
   makeStyles,
   useTheme
 } from '@material-ui/core/styles';
+
 import { TextField, Button, Select, MenuItem, InputLabel, FormControl, Chip, Input   } from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
-
+let YearLevel = [6, 7, 8, 9, 10]
 const Credentials = withStyles({
   root: {
     '& label.Mui-focused': {
@@ -55,6 +56,29 @@ const ColorButton = withStyles(theme => ({
 
 
 
+function getStyles(name, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
+
+
+  
+export default function Register() {
+  const theme = useTheme();
+  const [school, setSchool] = React.useState('');
+  const [step, setStep] = React.useState(1);
+  const [email, setEmail] = React.useState("");
+  const [pass, setPass] = React.useState("");
+  const [teach, setTeach] = React.useState(false);
+  const [Year, setYear] = React.useState([]);
+  const [Subjects, setSubjects] = React.useState([]);
+  const [personName, setPersonName] = React.useState([]);
+  
 const useStyles = makeStyles(theme => ({
   root: {
     position: "absolute",
@@ -97,7 +121,7 @@ Select : {
     accType1 : {
         width : "146px",
         height : "75px",
-        border :  "1px solid #000000",
+        border :  !teach ?   "1px solid #56B995" : "1px solid #000000",
         boxSizing : "border-box",
         borderRadius : "8px",
         justifyContent : "center",
@@ -110,7 +134,7 @@ Select : {
         width : "146px",
         float : "left",
         height : "75px",
-        border :  "1px solid #000000",
+        border :  teach ?  "1px solid #56B995" : "1px solid #000000",
         boxSizing : "border-box",
         borderRadius : "8px",
         justifyContent : "center",
@@ -140,27 +164,8 @@ Select : {
       },
 }));
 
-function getStyles(name, personName, theme) {
-    return {
-      fontWeight:
-        personName.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
-  }
-  
-export default function Register() {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [school, setSchool] = React.useState('');
-  const [step, setStep] = React.useState(1);
-  const [email, setEmail] = React.useState("");
-  const [pass, setPass] = React.useState("");
-  const [accType, setAccType] = React.useState("Student");
-  const [YearLevel, setYearLevel] = React.useState([]);
-  const [Subjects, setSubjects] = React.useState([]);
-  const [personName, setPersonName] = React.useState([]);
 
+const classes = useStyles();
 
   const handleChange = e => {
     setSchool(e.target.value);
@@ -168,6 +173,10 @@ export default function Register() {
 
   const handlePerChange = event => {
     setPersonName(event.target.value);
+  };
+
+  const handleYearChange = event => {
+    setYear(event.target.value);
   };
 
   // eslint-disable-next-line default-case
@@ -217,8 +226,8 @@ export default function Register() {
     return (
         <form className={classes.root} noValidate>
         <div className={classes.beam}>
-        <div className = {classes.accType}>Teacher</div>
-        <div className = {classes.accType1}>Student</div>
+        <div className = {classes.accType} onClick={() => setTeach(true)}>Teacher</div>
+        <div className = {classes.accType1} onClick={() => setTeach(false)}>Student</div>
         </div>
         <FormControl className={classes.Select}>
         <InputLabel id="demo-mutiple-chip-label">Subjects</InputLabel>
@@ -241,6 +250,31 @@ export default function Register() {
           {names.map(name => (
             <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
               {name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl className={classes.Select}>
+        <InputLabel id="demo-mutiple-chip-label">Year Level</InputLabel>
+        <Select
+          labelId="demo-mutiple-chip-label"
+          id="demo-mutiple-chip"
+          multiple
+          value={Year}
+          onChange={handleYearChange}
+          input={<Input id="select-multiple-chip" />}
+          renderValue={selected => (
+            <div className={classes.chips}>
+              {selected.map(value => ( 
+                <Chip key={value} label={value} className={classes.chip} />
+              ))}
+            </div>
+          )}
+          MenuProps={MenuProps}
+        >
+          {YearLevel.map(Year => (
+            <MenuItem key={Year} value={Year}>
+              {Year}
             </MenuItem>
           ))}
         </Select>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import {
   withStyles,
   makeStyles,
@@ -71,16 +72,23 @@ button : {
 
 
 export default function Login() {
+  const { register, handleSubmit, errors } = useForm(); // initialise the hook
+const onSubmit = data => {
+  console.log(data);
+};
+
   const classes = useStyles();
 
   return (
-    <form className={classes.root} noValidate>
+    <form className={classes.root} >
       <div className={classes.con}>
       <Credentials
       className={classes.TextField}
       label="Email"
       variant="outlined"
+      name="email"
       id="custom-css-outlined-input"
+      inputRef={register}
     />
       </div>
     <div className={classes.con}>
@@ -89,11 +97,13 @@ export default function Login() {
     label="Password"
     type = "password"
     variant="outlined"
+    name="password"
     id="custom-css-outlined-input" 
+    inputRef={register}
   />
     </div>
 
-    <ColorButton variant="contained" color="primary"  className={classes.button}>
+    <ColorButton variant="contained" color="primary"  className={classes.button} onClick={handleSubmit(onSubmit)}>
       Login
     </ColorButton>
     </form>
