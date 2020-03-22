@@ -7,6 +7,7 @@ import {
 import {TextField, Button} from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
 
+
 const Credentials = withStyles({
   root: {
     '& label.Mui-focused': {
@@ -71,10 +72,16 @@ button : {
 }));
 
 
-export default function Login() {
+export default function Login(props) {
+
+const {Email, setEmail} = React.useState("")
+const {password, setPassword} = React.useState("")
+
   const { register, handleSubmit, errors } = useForm(); // initialise the hook
 const onSubmit = data => {
   console.log(data);
+  console.log(errors.email)
+ props.handelRegister(data.email, data.password)
 };
 
   const classes = useStyles();
@@ -88,7 +95,12 @@ const onSubmit = data => {
       variant="outlined"
       name="email"
       id="custom-css-outlined-input"
-      inputRef={register}
+      inputRef={
+        register({
+          required : true,
+        })
+      }
+      error = {errors.email}
     />
       </div>
     <div className={classes.con}>
@@ -99,7 +111,12 @@ const onSubmit = data => {
     variant="outlined"
     name="password"
     id="custom-css-outlined-input" 
-    inputRef={register}
+    inputRef={
+      register({
+        required : true,
+        message: "oopsies"
+      })
+    }
   />
     </div>
 

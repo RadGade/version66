@@ -4,9 +4,9 @@ import {
   makeStyles,
   useTheme
 } from '@material-ui/core/styles';
-
 import { TextField, Button, Select, MenuItem, InputLabel, FormControl, Chip, Input   } from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
+
 let YearLevel = [6, 7, 8, 9, 10]
 const Credentials = withStyles({
   root: {
@@ -68,14 +68,15 @@ function getStyles(name, personName, theme) {
 
 
   
-export default function Register() {
+export default function Register(props) {
   const theme = useTheme();
   const [school, setSchool] = React.useState('');
   const [step, setStep] = React.useState(1);
   const [email, setEmail] = React.useState("");
   const [pass, setPass] = React.useState("");
   const [teach, setTeach] = React.useState(false);
-  const [Year, setYear] = React.useState([]);
+  const [teachYear, setTeachYear] = React.useState([]);
+  const [Year, setYear] = React.useState(null);
   const [Subjects, setSubjects] = React.useState([]);
   const [personName, setPersonName] = React.useState([]);
   
@@ -84,7 +85,7 @@ const useStyles = makeStyles(theme => ({
     position: "absolute",
     top : "15%",
     width : "20%"
-  },
+  }, 
   margin: {
     margin: theme.spacing(1),
   },
@@ -172,12 +173,22 @@ const classes = useStyles();
   };
 
   const handlePerChange = event => {
-    setPersonName(event.target.value);
+    setSubjects(event.target.value);
   };
 
   const handleYearChange = event => {
     setYear(event.target.value);
   };
+
+  const handleTeachYearChange = event => {
+    setTeachYear(event.target.value);
+  };
+
+  const handeSignUP = () => {
+    console.log(email, pass, school, teach, teachYear, Year, Subjects)
+    props.handelRegister(email, pass, school, teach, teachYear, Year, Subjects)
+  }
+
 
   // eslint-disable-next-line default-case
   switch(step) {
@@ -195,14 +206,16 @@ const classes = useStyles();
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={"Charles Campbell Collage"}>Charles Campbell Collage</MenuItem>
+              <MenuItem value={"Charles Campbell College"}>Charles Campbell College</MenuItem>
             </Select>
           </FormControl>
               <div className={classes.con}>
               <Credentials
-              className={classes.TextField}
+              className={classes.TextField} 
               label="Email"
+              name="Email"
               variant="outlined"
+              onChange={(data) => setEmail(data.target.value)}
               id="custom-css-outlined-input"
             />
               </div>
@@ -210,6 +223,8 @@ const classes = useStyles();
             <Credentials
             className={classes.TextField}
             label="Password"
+            name="Password"
+            onChange={(data) => setPass(data.target.value)}
             type = "password"
             variant="outlined"
             id="custom-css-outlined-input"
@@ -235,12 +250,12 @@ const classes = useStyles();
           labelId="demo-mutiple-chip-label"
           id="demo-mutiple-chip"
           multiple
-          value={personName}
+          value={Subjects}
           onChange={handlePerChange}
           input={<Input id="select-multiple-chip" />}
-          renderValue={selected => (
+          renderValue={choosed => (
             <div className={classes.chips}>
-              {selected.map(value => (
+              {choosed.map(value => (
                 <Chip key={value} label={value} className={classes.chip} />
               ))}
             </div>
@@ -254,32 +269,49 @@ const classes = useStyles();
           ))}
         </Select>
       </FormControl>
-      <FormControl className={classes.Select}>
-        <InputLabel id="demo-mutiple-chip-label">Year Level</InputLabel>
-        <Select
-          labelId="demo-mutiple-chip-label"
-          id="demo-mutiple-chip"
-          multiple
-          value={Year}
-          onChange={handleYearChange}
-          input={<Input id="select-multiple-chip" />}
-          renderValue={selected => (
-            <div className={classes.chips}>
-              {selected.map(value => ( 
-                <Chip key={value} label={value} className={classes.chip} />
-              ))}
-            </div>
-          )}
-          MenuProps={MenuProps}
-        >
-          {YearLevel.map(Year => (
-            <MenuItem key={Year} value={Year}>
-              {Year}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-        <ColorButton variant="contained" color="primary" className={classes.button}>
+            {teach === true &&
+              <FormControl className={classes.Select}>
+              <InputLabel id="demo-mutiple-chip-label">Year Level</InputLabel>
+              <Select
+                labelId="demo-mutiple-chip-label"
+                id="demo-mutiple-chip"
+                multiple
+                value={teachYear}
+                onChange={handleTeachYearChange}
+                input={<Input id="select-multiple-chip" />}
+                renderValue={selected => (
+                  <div className={classes.chips}>
+                    {selected.map(value => ( 
+                      <Chip key={value} label={value} className={classes.chip} />
+                    ))}
+                  </div>
+                )}
+                MenuProps={MenuProps}
+              >
+                {YearLevel.map(Year => (
+                  <MenuItem key={Year} value={Year}>
+                    {Year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl> }
+            {teach === false &&
+              <FormControl variant="outlined" className={classes.Select}>
+              <InputLabel id="simple-select-outlined-label">Year</InputLabel>
+              <Select
+                id="simple-select-outlined"
+                value={Year}
+                onChange={handleYearChange}
+                label="School"
+              >
+                {YearLevel.map(Year => (
+                  <MenuItem key={Year} value={Year}>
+                    {Year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl> }
+        <ColorButton variant="contained" color="primary" className={classes.button} onClick={handeSignUP}>
           Register
         </ColorButton>
         </form>

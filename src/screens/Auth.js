@@ -35,8 +35,8 @@ class Auth extends React.Component {
             <h1 className={"ComName" + (this.state.isRegisterOpen ? "-selected" : "")} onClick={this.showRegister.bind(this)}> Register</h1>
             </div>
            
-            {this.state.isLoginOpen && <Login />}
-            {this.state.isRegisterOpen && <Register />}
+            {this.state.isLoginOpen && <Login handelRegister = {this.props.handelSignIn} />}
+            {this.state.isRegisterOpen && <Register handelRegister = {this.props.handelRegister} />} 
                 <img src="/assets/lime-sign-up.png" alt="hero" className="hero" />
             
             </div>
