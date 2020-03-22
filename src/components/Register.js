@@ -200,7 +200,7 @@ const classes = useStyles();
             <Select
               id="simple-select-outlined"
               value={school}
-              onChange={handleChange}
+              onChange={() => handleChange}
               label="School"
             >
               <MenuItem value="">
@@ -251,7 +251,7 @@ const classes = useStyles();
           id="demo-mutiple-chip"
           multiple
           value={Subjects}
-          onChange={handlePerChange}
+          onChange={() => handlePerChange}
           input={<Input id="select-multiple-chip" />}
           renderValue={choosed => (
             <div className={classes.chips}>
@@ -277,7 +277,7 @@ const classes = useStyles();
                 id="demo-mutiple-chip"
                 multiple
                 value={teachYear}
-                onChange={handleTeachYearChange}
+                onChange={() => handleTeachYearChange}
                 input={<Input id="select-multiple-chip" />}
                 renderValue={selected => (
                   <div className={classes.chips}>
@@ -301,7 +301,7 @@ const classes = useStyles();
               <Select
                 id="simple-select-outlined"
                 value={Year}
-                onChange={handleYearChange}
+                onChange={() => handleYearChange}
                 label="School"
               >
                 {YearLevel.map(Year => (
@@ -311,7 +311,7 @@ const classes = useStyles();
                 ))}
               </Select>
             </FormControl> }
-        <ColorButton variant="contained" color="primary" className={classes.button} onClick={handeSignUP}>
+        <ColorButton variant="contained" color="primary" className={classes.button} onClick={() => handeSignUP}>
           Register
         </ColorButton>
         </form>

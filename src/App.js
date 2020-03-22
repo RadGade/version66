@@ -1,8 +1,23 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-expressions */
+import React, { Component } from 'react';
 import Auth from './screens/Auth'
 import Loading from './screens/Loading'
 import './App.css';
 import * as firebase from 'firebase'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useHistory,
+  useLocation
+} from "react-router-dom";
+
+
+let isAuthenticated = false
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCzzEkw3vZFhrHz2UjWkFTzH1M58a75Tuc",
@@ -18,9 +33,58 @@ firebase.initializeApp(firebaseConfig)
 
 const db = firebase.firestore()
 
-function App () {
 
-  const handelRegister = (email, password, school, teach, teachYear, Year, Subjects) => {
+
+function PrivateRoute ({component: Component, isAuth, ...rest}) {
+  return (
+    <Route
+      {...rest}
+      render={(props) => isAuth === true
+        ? <Component {...props} />
+        : <Redirect to={{pathname: '/auth', state: {from: props.location}}} />}
+    />
+  )
+}
+
+
+function PublicRoute ({component: Component, authed, ...rest}) {
+  return (
+    <Route
+      {...rest}
+      render={(props) => authed === false
+        ? <Component {...props} />
+        : <Redirect to='/' />}
+    />
+  )
+}
+
+
+class App extends React.Component {
+
+state = {
+      isAuth : false
+    }
+
+  componentDidMount() {
+    this.removeListener = firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        isAuthenticated = true
+        this.setState({
+          isAuth : true
+        })
+      } else {
+        this.setState({
+          isAuth : true
+        })
+      }
+    })
+}
+
+componentWillUnmount () {
+  this.removeListener()
+}
+
+   handelRegister (email, password, school, teach, teachYear, Year, Subjects) {
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then((User) => {
       if(teach){
@@ -50,21 +114,34 @@ function App () {
 
 
 
-  const handelSignIn = (email, password) => {
+   handelSignIn (email, password) {
       firebase.auth().signInWithEmailAndPassword(email, password)
   }
 
+  render() {
+    return (
+      <div className="App">
 
-
-  return (
-    <div className="App">
+      <Router>
+        <Switch>
+        <Route path="/auth">
         <Auth 
-        handelRegister = {handelRegister} 
-        handelSignIn = {handelSignIn}
+        handelRegister = {this.handelRegister} 
+        handelSignIn = {this.handelSignIn}
         />
-    </div>
-  );
+      </Route>
+      <PublicRoute authed={this.state.authed} path='/login' component={Login}  />
+      <PrivateRoute isAuth={this.state.isAuth} path='/' component={Loading} />
+        </Switch>
+      </Router>
+   
 
+          <button onClick={() => {
+            console.log(this.state.isAuth)
+          }}>Check</button>
+      </div>
+    );
+  }
 }
 
 export default App;
