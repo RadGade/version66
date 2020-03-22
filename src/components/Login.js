@@ -80,7 +80,7 @@ const {password, setPassword} = React.useState("")
   const { register, handleSubmit, errors } = useForm(); // initialise the hook
 const onSubmit = data => {
   console.log(data);
-console.log(errors.email)
+  console.log(errors.email)
  props.handelRegister(data.email, data.password)
 };
 
