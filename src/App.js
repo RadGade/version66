@@ -62,7 +62,8 @@ function PublicRoute ({component: Component, authed, ...rest}) {
 class App extends React.Component {
 
 state = {
-      isAuth : false
+      isAuth : false,
+      loading: true,
     }
 
   componentDidMount() {
@@ -70,11 +71,11 @@ state = {
       if (user) {
         isAuthenticated = true
         this.setState({
-          isAuth : true
+          isAuth : true,
         })
       } else {
         this.setState({
-          isAuth : true
+          isAuth : false,
         })
       }
     })
@@ -124,14 +125,9 @@ componentWillUnmount () {
 
       <Router>
         <Switch>
-        <Route path="/auth">
-        <Auth 
-        handelRegister = {this.handelRegister} 
-        handelSignIn = {this.handelSignIn}
-        />
-      </Route>
-      <PublicRoute authed={this.state.authed} path='/login' component={Login}  />
-      <PrivateRoute isAuth={this.state.isAuth} path='/' component={Loading} />
+
+      <PublicRoute authed={this.state.isAuth} path='/auth' component={Auth} handelRegister = {this.handelRegister} handelSignIn = {this.handelSignIn}  />
+      <PrivateRoute isAuth={this.state.isAuth} path='/' exact component={Loading} />
         </Switch>
       </Router>
    
